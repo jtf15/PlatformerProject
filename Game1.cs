@@ -22,10 +22,11 @@ namespace PlatformerProject
 
 
         //This is the input hdanler for our program
-        KeyboardState currentKeyboardState;
-        KeyboardState oldKeyboardState;
+       // KeyboardState currentKeyboardState;
+      //  KeyboardState oldKeyboardState;
 
         Texture2D mainbackground;
+        Texture2D nocol;
 
         public Game1()
         {
@@ -56,7 +57,8 @@ namespace PlatformerProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            mainbackground = Content.Load<Texture2D>("mainbackground");
+            mainbackground = Content.Load<Texture2D>("background");
+            nocol = Content.Load<Texture2D>("nocol");
         }
 
         /// <summary>
@@ -96,6 +98,7 @@ namespace PlatformerProject
             spriteBatch.Begin();
 
             spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);
+            spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);
 
             spriteBatch.End();
 
