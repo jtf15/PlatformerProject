@@ -11,9 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace PlatformerProject
 {
-       //@Derek Ness git repo test, this should update in the repo
-       //DNESS TESTING
-       //Enjoy your first pull!
+    
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -26,6 +24,8 @@ namespace PlatformerProject
         //This is the input hdanler for our program
         KeyboardState currentKeyboardState;
         KeyboardState oldKeyboardState;
+
+        Texture2D mainbackground;
 
         public Game1()
         {
@@ -56,6 +56,7 @@ namespace PlatformerProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            mainbackground = Content.Load<Texture2D>("mainbackground");
         }
 
         /// <summary>
@@ -92,11 +93,16 @@ namespace PlatformerProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        public override void UpdatePlayer(GameTime gameTime)
+       /*public override void UpdatePlayer(GameTime gameTime)
         {
         }
 
@@ -106,7 +112,7 @@ namespace PlatformerProject
         
         
         
-        }
+        }*/
 
 
         
