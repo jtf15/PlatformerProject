@@ -64,6 +64,7 @@ namespace PlatformerProject
             Animation playerAnimation = new Animation();
             
             Texture2D playerTexture = Content.Load<Texture2D>("kidright");
+
             playerAnimation.Initialize(playerTexture, Vector2.Zero, 33, 64, 4, 80, Color.White, 1f, false);
             
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
@@ -142,6 +143,7 @@ namespace PlatformerProject
             {
                 player.PlayerAnimation.Looping = false;
             }
+
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
