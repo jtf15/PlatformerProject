@@ -20,11 +20,12 @@ namespace PlatformerProject
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-
+        Player player;
+        float playerMoveSpeed;
         //This is the input handler for our program
-        //KeyboardState currentKeyboardState;
-       // KeyboardState oldKeyboardState;
-
+        KeyboardState currentKeyboardState;
+        KeyboardState oldKeyboardState;
+           
 
         //These are 2D textures that are drawn onto the screen
         Texture2D mainbackground;   //The main backgorund
@@ -43,9 +44,11 @@ namespace PlatformerProject
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
+        {   
             // TODO: Add your initialization logic here
-
+            player = new Player();
+               
+            playerMoveSpeed = 3.0f;
             base.Initialize();
         }
 
@@ -57,10 +60,20 @@ namespace PlatformerProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            //Load the player and his animations
+            Animation playerAnimation = new Animation();
+            
+            Texture2D playerTexture = Content.Load<Texture2D>("kidright");
+            playerAnimation.Initialize(playerTexture, Vector2.Zero, 32, 64, 5, 80, Color.White, 1f, false);
+            
+            Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
+            + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
+            player.Initialize(playerAnimation, playerPosition);
+           
             // TODO: use this.Content to load your game content here
             mainbackground = Content.Load<Texture2D>("background");
             nocol = Content.Load<Texture2D>("treeSmall");
+
         }
 
         /// <summary>
@@ -80,8 +93,7 @@ namespace PlatformerProject
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            UpdatePlayer(gameTime);
 
             // TODO: Add your update logic here
 
@@ -104,23 +116,44 @@ namespace PlatformerProject
 
             spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background
             spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
+            
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-       /*public override void UpdatePlayer(GameTime gameTime)
+       private void UpdatePlayer(GameTime gameTime)
         {
+            player.Update(gameTime); 
+           
+           currentKeyboardState = Keyboard.GetState();
+
+            if (currentKeyboardState.IsKeyDown(Keys.D))
+            {
+                
+                    player.PlayerAnimation.Looping = true;
+                    player.Position.X += playerMoveSpeed;
+                
+            }
+           
+            if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
+            {
+                player.PlayerAnimation.Looping = false;
+            }
+            player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
+            player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
+
+
+
+
+            oldKeyboardState = currentKeyboardState;
         }
 
 
-        protected override void UpdateInput(GameTime gameTime)
-        {
-        
-        
-        
-        }*/
+       
+
 
 
         
