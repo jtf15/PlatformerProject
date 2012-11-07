@@ -20,13 +20,14 @@ namespace PlatformerProject
 
         // The time we display a frame until the next one
         int frameTime;
-
+       
         // The number of frames that the animation contains
         int frameCount;
 
         // The index of the current frame we are displaying
         int currentFrame;
 
+        
         // The color of the frame we will be displaying
         Color color;
 
@@ -89,10 +90,13 @@ namespace PlatformerProject
             {
 
                 if (Looping == false)
+                {
                     Active = false;
+                    currentFrame = 0;
+                }
                 if (Looping == true)
-                    Active = true;
-
+                  Active = true;
+                 
                 // Move to the next frame
                 if(Active == true)
                  currentFrame++;
