@@ -64,14 +64,14 @@ namespace PlatformerProject
             Animation playerAnimation = new Animation();
             
             Texture2D playerTexture = Content.Load<Texture2D>("kidright");
-            playerAnimation.Initialize(playerTexture, Vector2.Zero, 32, 64, 5, 80, Color.White, 1f, false);
+            playerAnimation.Initialize(playerTexture, Vector2.Zero, 33, 64, 4, 80, Color.White, 1f, false);
             
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Initialize(playerAnimation, playerPosition);
            
             // TODO: use this.Content to load your game content here
-            mainbackground = Content.Load<Texture2D>("background");
+            mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
 
         }
