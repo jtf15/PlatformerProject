@@ -21,12 +21,14 @@ namespace PlatformerProject
         SpriteBatch spriteBatch;
 
 
-        //This is the input hdanler for our program
-       // KeyboardState currentKeyboardState;
-      //  KeyboardState oldKeyboardState;
+        //This is the input handler for our program
+        //KeyboardState currentKeyboardState;
+       // KeyboardState oldKeyboardState;
 
-        Texture2D mainbackground;
-        Texture2D nocol;
+
+        //These are 2D textures that are drawn onto the screen
+        Texture2D mainbackground;   //The main backgorund
+        Texture2D nocol;            //Testing non-collision tree
 
         public Game1()
         {
@@ -58,7 +60,7 @@ namespace PlatformerProject
 
             // TODO: use this.Content to load your game content here
             mainbackground = Content.Load<Texture2D>("background");
-            nocol = Content.Load<Texture2D>("nocol");
+            nocol = Content.Load<Texture2D>("treeSmall");
         }
 
         /// <summary>
@@ -95,10 +97,13 @@ namespace PlatformerProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            
+            //Starts the sprite batch
+            //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
 
-            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);
-            spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);
+            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background
+            spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
 
             spriteBatch.End();
 
