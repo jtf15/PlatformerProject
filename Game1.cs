@@ -190,6 +190,7 @@ namespace PlatformerProject
 
                 if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
                 {
+                    player.PlayerAnimation.Looping = false;
                     currentState = State.MenuState;
                 }
               
