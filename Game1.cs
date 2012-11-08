@@ -22,6 +22,19 @@ namespace PlatformerProject
 
         Player player;
         float playerMoveSpeed;
+
+       //This enumeration is used to keep track of the state
+        //it will restrict updating to the proper components of the game
+        //this would allow the game to appear frozen if in menu
+        public enum State
+        {
+            TitleState,
+            PlayState,
+            MenuState
+        };
+
+        State currentState;
+
         //This is the input handler for our program
         KeyboardState currentKeyboardState;
         KeyboardState oldKeyboardState;
@@ -31,10 +44,13 @@ namespace PlatformerProject
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
         Texture2D platform;
+       
+        
         //This is the menu screen used to choose options
         Texture2D menuScreen;
+        NoCol mousePointer;
+        int mouseCounter = 0;
         
-        bool drawMenu = false;  //This boolean is used for now to determine whether or not the menu should be drawn
 
         public Game1()
         {
@@ -52,8 +68,11 @@ namespace PlatformerProject
         {   
             // TODO: Add your initialization logic here
             player = new Player();
-               
             playerMoveSpeed = 3.0f;
+           
+            currentState = State.PlayState;
+            
+
             base.Initialize();
         }
 
@@ -65,6 +84,8 @@ namespace PlatformerProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+           
            
             //Load the player and his animations
             Animation playerAnimation = new Animation();
@@ -80,6 +101,8 @@ namespace PlatformerProject
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
             platform = Content.Load<Texture2D>("platform");
+
+            mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
         /// <summary>
@@ -130,10 +153,15 @@ namespace PlatformerProject
             
 
 
-            if(drawMenu)
-             spriteBatch.Draw(menuScreen, new Vector2(200,200), null,  Color.White, 0f, Vector2.Zero,.5f, SpriteEffects.None, 0f) ;
+            
              //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
             player.Draw(spriteBatch);
+
+            if (currentState == State.MenuState)
+            {
+                spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
+                mousePointer.drawNoCol();
+            }
 
             spriteBatch.End();
 
@@ -142,44 +170,51 @@ namespace PlatformerProject
 
        private void UpdatePlayer(GameTime gameTime)
         {
-            player.Update(gameTime); 
-           
-           currentKeyboardState = Keyboard.GetState();
+            player.Update(gameTime);
 
-            if (currentKeyboardState.IsKeyDown(Keys.D))
+            currentKeyboardState = Keyboard.GetState();
+
+           if(currentState == State.PlayState)
             {
-                
+                if (currentKeyboardState.IsKeyDown(Keys.D))
+                {
+
                     player.PlayerAnimation.Looping = true;
                     player.Position.X += playerMoveSpeed;
-                
+
+                }
+
+                if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
+                {
+                    player.PlayerAnimation.Looping = false;
+                }
+
+                if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
+                {
+                    currentState = State.MenuState;
+                }
+              
             }
+           else if (currentState == State.MenuState)
+           {
+               if (oldKeyboardState.IsKeyDown(Keys.C) && currentKeyboardState.IsKeyUp(Keys.C))
+               {
+                   currentState = State.PlayState;
+               }
+               if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D) && mouseCounter == 0)
+               {
+                   mousePointer.incrementPosition(100f, 0f);
+                   mouseCounter = 1;
+                   
+               }
+               if (oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A) && mouseCounter == 1)
+               {
+                   mousePointer.incrementPosition(-100f, 0f);
+                   mouseCounter = 0;
+               }
+           }
+          
            
-            if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
-            {
-                player.PlayerAnimation.Looping = false;
-            }
-
-           
-            /*
-             *The next two lines will draw and clear a menu from the playing screen, however the game will
-             *continue even when the menu is up. The plan to stop this is to use Game States, so rather set 
-             *a boolean to allow a menu to be drawn pressing m would change the Game State to Menu State. This
-             *would allow us to pause the program while the menu is up or even to have a title screen.
-             */
-           //simple implementation of a menu screen
-           //brings up the menu if the 'm' button is pressed and released
-           if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
-            {
-                drawMenu = true;
-            }
-
-           //if the menu is currently up and 'c' is pressed it will clear the menu
-            if (oldKeyboardState.IsKeyDown(Keys.C) && currentKeyboardState.IsKeyUp(Keys.C) && drawMenu)
-            {
-                drawMenu = false;
-            }
-
-
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
