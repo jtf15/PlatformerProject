@@ -91,7 +91,7 @@ namespace PlatformerProject
             Animation playerAnimation = new Animation();
             Texture2D playerTexture = Content.Load<Texture2D>("kidright");
             playerAnimation.Initialize(playerTexture, Vector2.Zero, 33, 64, 4, 80, Color.White, 1f, false);
-            Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
+            Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X + 20f, GraphicsDevice.Viewport.TitleSafeArea.Y
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Initialize(playerAnimation, playerPosition);
             
@@ -100,7 +100,7 @@ namespace PlatformerProject
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
-            platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(400f, 500f), spriteBatch, 1f);
+            platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(0f, 400f), spriteBatch, 2f);
             mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
@@ -148,12 +148,13 @@ namespace PlatformerProject
             spriteBatch.Begin();
 
             spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background
-            spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
+            //spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
             
 
 
             
              //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
+            platform.drawNoCol();
             player.Draw(spriteBatch);
 
             if (currentState == State.MenuState)
@@ -175,23 +176,34 @@ namespace PlatformerProject
 
            if(currentState == State.PlayState)
             {
-                if (currentKeyboardState.IsKeyDown(Keys.D))
+                if (((platform.position.Y - player.Position.Y) >= 30 && (platform.position.Y - player.Position.Y) <= 35) &&
+                     player.Position.X >= platform.position.X && player.Position.X <= (platform.position.X + platform.width + 10f))
                 {
+                    if (currentKeyboardState.IsKeyDown(Keys.D))
+                    {
 
-                    player.PlayerAnimation.Looping = true;
+                        player.PlayerAnimation.Looping = true;
+                        
+                            player.Position.X += playerMoveSpeed;
+
+                    }
+
+                    if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
+                    {
+                        player.PlayerAnimation.Looping = false;
+                    }
+
+                    if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
+                    {
+                        player.PlayerAnimation.Looping = false;
+                        currentState = State.MenuState;
+                    }
+                }
+                else
+                {
+                    player.PlayerAnimation.Looping = false;
+                    player.Position.Y += playerMoveSpeed;
                     player.Position.X += playerMoveSpeed;
-
-                }
-
-                if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
-                {
-                    player.PlayerAnimation.Looping = false;
-                }
-
-                if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
-                {
-                    player.PlayerAnimation.Looping = false;
-                    currentState = State.MenuState;
                 }
               
             }

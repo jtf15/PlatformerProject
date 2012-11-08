@@ -16,13 +16,13 @@ namespace PlatformerProject
         Texture2D picture;
         
         // This will be the position where it will be drawn
-        Vector2 position;
+        public Vector2 position;
         
         // The width and the height, in order to calculate hitbox
-        float width, height;
+        public float width, height;
         
         // The rectancle surrounding the object, will be used for collision
-        Rectangle hitbox;
+        public Rectangle hitbox;
         
         // The batch, will be used to draw!
         SpriteBatch batch;
@@ -34,8 +34,8 @@ namespace PlatformerProject
         {
             this.picture = picture;     // The picture to be drawn
             this.position = position;   // The position to where it will be drawn
-            this.width = picture.Width; // Width of the picture
-            this.height = picture.Height; //Height of the sprite
+            this.width = picture.Width * scale; // Width of the picture
+            this.height = picture.Height * scale; //Height of the sprite
             hitbox = new Rectangle((int)position.X, (int)position.Y, (int)this.width, (int)this.height); //This hitbox is the rectangle that is surrounding the sprite
             this.batch = batch; // Getting the batch so that we can draw in this funtion
             this.scale = scale; // In case we need to scale (in example, for the floor). 
@@ -45,6 +45,7 @@ namespace PlatformerProject
 
         public void drawNoCol()
         {
+            hitbox = new Rectangle((int)position.X, (int)position.Y, (int)this.width, (int)this.height);
             batch.Draw(picture, position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 
         }

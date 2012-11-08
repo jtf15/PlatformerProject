@@ -62,6 +62,7 @@ namespace PlatformerProject
         // Draw the player
         public void Draw(SpriteBatch spriteBatch)
         {
+            hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height);
             PlayerAnimation.Draw(spriteBatch);
         }
     }
