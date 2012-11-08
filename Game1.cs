@@ -43,7 +43,7 @@ namespace PlatformerProject
         //These are 2D textures that are drawn onto the screen
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
-        Texture2D platform;
+        Platform platform;
        
         
         //This is the menu screen used to choose options
@@ -100,8 +100,7 @@ namespace PlatformerProject
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
-            platform = Content.Load<Texture2D>("platform");
-
+            platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(400f, 500f), spriteBatch, 1f);
             mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
