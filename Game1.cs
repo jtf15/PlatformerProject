@@ -9,6 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+/*
+ * Platformer Project 
+ * By:  Josh Frey
+ *      Derek Bitterman
+ *      Derek Ness
+ * */
+
 namespace PlatformerProject
 {
     
@@ -38,6 +45,9 @@ namespace PlatformerProject
         //This is the input handler for our program
         KeyboardState currentKeyboardState;
         KeyboardState oldKeyboardState;
+
+        GamePadState currentGamePadState;
+        GamePadState oldGamePadState;
            
 
         //These are 2D textures that are drawn onto the screen
@@ -71,7 +81,6 @@ namespace PlatformerProject
             playerMoveSpeed = 3.0f;
            
             currentState = State.PlayState;
-            
 
             base.Initialize();
         }
@@ -85,8 +94,6 @@ namespace PlatformerProject
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-           
-           
             //Load the player and his animations
             Animation playerAnimation = new Animation();
             Texture2D playerTexture = Content.Load<Texture2D>("kidright");
@@ -122,9 +129,6 @@ namespace PlatformerProject
         {
             // Allows the game to exit
             UpdatePlayer(gameTime);
-
-            // TODO: Add your update logic here
-
             base.Update(gameTime);
         }
 
@@ -147,16 +151,13 @@ namespace PlatformerProject
             //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
 
-            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background
-            //spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
-            
-
-
+            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background    
             
              //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
             platform.drawNoCol();
             player.Draw(spriteBatch);
 
+            //Will draw the menu only if the game is currently in the MenuState
             if (currentState == State.MenuState)
             {
                 spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
@@ -173,7 +174,11 @@ namespace PlatformerProject
             player.Update(gameTime);
 
             currentKeyboardState = Keyboard.GetState();
+            currentGamePadState = GamePad.GetState(PlayerIndex.One);
 
+//*********************************************************************************************************************************************
+//************************************************* CONTROL FOR PLAYSTATE *********************************************************************
+//*********************************************************************************************************************************************
            if(currentState == State.PlayState)
             {
                 if (((platform.position.Y - player.Position.Y) >= 30 && (platform.position.Y - player.Position.Y) <= 35) &&
@@ -188,12 +193,14 @@ namespace PlatformerProject
 
                     }
 
+                    //if D is released stop moving
                     if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
                     {
                         player.PlayerAnimation.Looping = false;
                     }
 
-                    if (oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M))
+                    //if m is pressed stop moving and switch to MenuState
+                    if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
                     {
                         player.PlayerAnimation.Looping = false;
                         currentState = State.MenuState;
@@ -207,25 +214,34 @@ namespace PlatformerProject
                 }
               
             }
+//*********************************************************************************************************************************************
+//************************************************* CONTROL FOR MENUSTATE *********************************************************************
+//*********************************************************************************************************************************************
            else if (currentState == State.MenuState)
            {
-               if (oldKeyboardState.IsKeyDown(Keys.C) && currentKeyboardState.IsKeyUp(Keys.C))
+               //if c is pressed go back to the PlayState
+               if ((oldKeyboardState.IsKeyDown(Keys.C) && currentKeyboardState.IsKeyUp(Keys.C)) || currentGamePadState.Buttons.B == ButtonState.Pressed)
                {
                    currentState = State.PlayState;
                }
-               if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D) && mouseCounter == 0)
+               //if d is pressed move menu arrow left, but only if it is currently on continue option
+               if ((oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.DPad.Right == ButtonState.Pressed && mouseCounter == 0)
                {
                    mousePointer.incrementPosition(100f, 0f);
                    mouseCounter = 1;
                    
                }
-               if (oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A) && mouseCounter == 1)
+
+               //if a is pressed move menu arrow right, but only if it is currently on exit option
+               if ((oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A)) || currentGamePadState.DPad.Left == ButtonState.Pressed && mouseCounter == 1)
                {
                    mousePointer.incrementPosition(-100f, 0f);
                    mouseCounter = 0;
                }
            }
-          
+//*********************************************************************************************************************************************
+//************************************************* END OF CONTROL SECTION ********************************************************************
+//*********************************************************************************************************************************************
            
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
@@ -234,6 +250,7 @@ namespace PlatformerProject
 
 
             oldKeyboardState = currentKeyboardState;
+            oldGamePadState = currentGamePadState;
         }
 
 
