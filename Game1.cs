@@ -33,6 +33,7 @@ namespace PlatformerProject
 
         //This is the menu screen used to choose options
         Texture2D menuScreen;
+        
         bool drawMenu = false;  //This boolean is used for now to determine whether or not the menu should be drawn
 
         public Game1()
@@ -78,7 +79,7 @@ namespace PlatformerProject
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
-
+            
         }
 
         /// <summary>
@@ -122,9 +123,11 @@ namespace PlatformerProject
             spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background
             spriteBatch.Draw(nocol, new Vector2(400,175), Color.White);     //Draw the tree
             
+
+
             if(drawMenu)
-             spriteBatch.Draw(menuScreen, new Vector2(200,200), Color.White);
-            
+             spriteBatch.Draw(menuScreen, new Vector2(200,200), null,  Color.White, 0f, Vector2.Zero,.5f, SpriteEffects.None, 0f) ;
+             //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
             player.Draw(spriteBatch);
 
             spriteBatch.End();
