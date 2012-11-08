@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 namespace PlatformerProject
 {
-    class Player
+    class Player : Collidable
     { 
         // Animation representing the player
         //public Texture2D PlayerTexture;

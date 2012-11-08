@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PlatformerProject
 {
-    class Platform
+    class Platform : Collidable
     {
         /// <summary>
         /// This class is going to be used to hold all of the current platforms on the screen.
