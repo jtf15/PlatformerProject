@@ -23,6 +23,9 @@ namespace PlatformerProject
         // State of the player
         public bool Active;
 
+        public Rectangle hitbox ;
+        
+
         // Get the width of the player ship
         public int Width
         {
@@ -44,6 +47,7 @@ namespace PlatformerProject
             // Set the starting position of the player around the middle of the screen and to the back
             Position = position;
 
+            hitbox = new Rectangle((int)position.X, (int)position.Y, (int)this.Width, (int)this.Height);
             // Set the player to be active
             Active = true;
         }
