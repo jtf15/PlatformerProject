@@ -30,7 +30,7 @@ namespace PlatformerProject
         //These are 2D textures that are drawn onto the screen
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
-
+        Texture2D platform;
         //This is the menu screen used to choose options
         Texture2D menuScreen;
         
@@ -79,7 +79,7 @@ namespace PlatformerProject
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
-            
+            platform = Content.Load<Texture2D>("platform");
         }
 
         /// <summary>
@@ -104,6 +104,11 @@ namespace PlatformerProject
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+        }
+
+        private void UpdateCollision()
+        {
+
         }
 
         /// <summary>
