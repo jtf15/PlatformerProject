@@ -35,6 +35,13 @@ namespace PlatformerProject
             batch.Draw(picture, position, Color.White) ;
         }
 
+        public void updatePosition(float x, float y)
+        {
+            position.X = x;
+            position.Y = y;
+
+        }
+
 
     }
 }
