@@ -19,7 +19,7 @@ namespace PlatformerProject
         float width, height;
         SpriteBatch batch;
         bool active;
-
+        
         public NoCol(Texture2D picture, Vector2 position, SpriteBatch batch)
         {
             this.picture = picture; // The sprite
@@ -35,13 +35,13 @@ namespace PlatformerProject
             batch.Draw(picture, position, Color.White) ;
         }
 
-        public void updatePosition(float x, float y)
+        public void incrementPosition(float x, float y)
         {
-            position.X = x;
-            position.Y = y;
-
+            position.X += x;
+            position.Y += y;
         }
 
+       
 
     }
 }
