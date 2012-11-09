@@ -30,7 +30,7 @@ namespace PlatformerProject
         Player player;
         float playerMoveSpeed;
 
-       //This enumeration is used to keep track of the state
+        //This enumeration is used to keep track of the state
         //it will restrict updating to the proper components of the game
         //this would allow the game to appear frozen if in menu
         public enum State
@@ -40,7 +40,7 @@ namespace PlatformerProject
             MenuState
         };
 
-        State currentState;
+        State currentState; //this is the variable that keeps track of the state
 
         //This is the input handler for our program
         KeyboardState currentKeyboardState;
@@ -61,8 +61,8 @@ namespace PlatformerProject
         
         //This is the menu screen used to choose options
         Texture2D menuScreen;
-        NoCol mousePointer;
-        int mouseCounter = 0;
+        NoCol mousePointer;     //The mouse pointer is a NoCol object to make it easier to move
+        int mouseCounter = 0;   //This is currently used to know which option in the menu is selected
         
 
         public Game1()
@@ -79,10 +79,11 @@ namespace PlatformerProject
         /// </summary>
         protected override void Initialize()
         {   
-            // TODO: Add your initialization logic here
+            //Initialize the player and his movement speed
             player = new Player();
             playerMoveSpeed = 3.0f;
            
+            //Initialize the current state to title screen
             currentState = State.TitleState;
 
             base.Initialize();
@@ -150,36 +151,43 @@ namespace PlatformerProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
             
             //Starts the sprite batch
             //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
 
-            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background    
-            
-             //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
+            //********************************
+            //*** FIRST LAYER OF THE SCREEN **
+            //********************************
+            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //The mainbackground, should always be up
+
+            //Will draw the title only if the game is currently in the TitleState
+            //This will actually lay on top of the main background
+            if (currentState == State.TitleState)
+            {
+                spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .75f, SpriteEffects.None, 0f); //draw the titlescreen
+            }
+
+
+            //********************************
+            //** SECOND LAYER OF THE SCREEN **
+            //******************************** 
+            //This layer will only show if the current state is in play or menu state
             if (currentState == State.PlayState || currentState == State.MenuState)
             {
-                platform.drawNoCol();
-                player.Draw(spriteBatch);
+                platform.drawNoCol();        //draw the platform object
+                player.Draw(spriteBatch);    //draw the player onto the screen
 
+                //This will be drawn on top of the player and all other current object if the current state is menu
                 if (currentState == State.MenuState)
                 {
-                    spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
-                    mousePointer.drawNoCol();
+                    spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);  //draw the menu
+                    mousePointer.drawNoCol();   //draw the mouse pointer on top of the menu
                 }
             }
-            //Will draw the menu only if the game is currently in the MenuState
-           
-            if(currentState == State.TitleState)
-            {
-                spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .75f, SpriteEffects.None, 0f);
-            }
 
+            //end the sprite batch and ends current Update's Drawing process
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
 
@@ -195,7 +203,7 @@ namespace PlatformerProject
 //*********************************************************************************************************************************************
            if(currentState == State.PlayState)
             {
-                if (((platform.position.Y - player.Position.Y) >= 30 && (platform.position.Y - player.Position.Y) <= 35) &&
+                 if (((platform.position.Y - player.Position.Y) >= 30 && (platform.position.Y - player.Position.Y) <= 35) &&
                      player.Position.X >= platform.position.X && player.Position.X <= (platform.position.X + platform.width + 10f))
                 {
                     if (currentKeyboardState.IsKeyDown(Keys.D))
