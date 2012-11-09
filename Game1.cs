@@ -224,6 +224,14 @@ namespace PlatformerProject
                         player.Position.X -= playerMoveSpeed;
 
                     }
+                    else if (currentKeyboardState.IsKeyDown(Keys.Space))
+                    {
+
+                        player.PlayerAnimation.Looping = true;
+
+                        player.Position.Y -= playerMoveSpeed;
+
+                    }
 
                     //if D is released stop moving
                     if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
@@ -232,7 +240,7 @@ namespace PlatformerProject
                     } if (oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A))
                     {
                         player.PlayerAnimation.Looping = false;
-                    }
+                    } 
 
                     //if m is pressed stop moving and switch to MenuState
                     if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
@@ -260,7 +268,7 @@ namespace PlatformerProject
                    currentState = State.PlayState;
                }
                //if d is pressed move menu arrow left, but only if it is currently on continue option
-               if ((oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.DPad.Right == ButtonState.Pressed && mouseCounter == 0)
+               if (((oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.DPad.Right == ButtonState.Pressed) && mouseCounter == 0)
                {
                    mousePointer.incrementPosition(100f, 0f);
                    mouseCounter = 1;
@@ -268,7 +276,7 @@ namespace PlatformerProject
                }
 
                //if a is pressed move menu arrow right, but only if it is currently on exit option
-               if ((oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A)) || currentGamePadState.DPad.Left == ButtonState.Pressed && mouseCounter == 1)
+               if (((oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A)) || currentGamePadState.DPad.Left == ButtonState.Pressed) && mouseCounter == 1)
                {
                    mousePointer.incrementPosition(-100f, 0f);
                    mouseCounter = 0;
