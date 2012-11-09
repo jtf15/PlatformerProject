@@ -51,12 +51,13 @@ namespace PlatformerProject
 
         //Title Screen Texture
         Texture2D titleScreen;
-           
+
+        SevenEngine physics;
 
         //These are 2D textures that are drawn onto the screen
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
-        Platform platform;
+        Platform platform, platform2;
        
         
         //This is the menu screen used to choose options
@@ -85,7 +86,7 @@ namespace PlatformerProject
            
             //Initialize the current state to title screen
             currentState = State.TitleState;
-
+            physics = new SevenEngine();
             base.Initialize();
         }
 
@@ -115,6 +116,7 @@ namespace PlatformerProject
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
             platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(0f, 400f), spriteBatch, 2f);
+            platform2 = new Platform(Content.Load<Texture2D>("platform2"), new Vector2(150f, 320f), spriteBatch, 2f);
             mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
@@ -176,6 +178,7 @@ namespace PlatformerProject
             if (currentState == State.PlayState || currentState == State.MenuState)
             {
                 platform.drawNoCol();        //draw the platform object
+                platform2.drawNoCol();
                 player.Draw(spriteBatch);    //draw the player onto the screen
 
                 //This will be drawn on top of the player and all other current object if the current state is menu
@@ -203,10 +206,9 @@ namespace PlatformerProject
 //*********************************************************************************************************************************************
            if(currentState == State.PlayState)
             {
-                 if (((platform.position.Y - player.Position.Y) >= 30 && (platform.position.Y - player.Position.Y) <= 35) &&
-                     player.Position.X >= platform.position.X && player.Position.X <= (platform.position.X + platform.width + 10f))
+                 if (physics.isOnTopOf(player, platform))
                 {
-                    if (currentKeyboardState.IsKeyDown(Keys.D))
+                    if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
                     {
 
                         player.PlayerAnimation.Looping = true;
@@ -214,9 +216,20 @@ namespace PlatformerProject
                             player.Position.X += playerMoveSpeed;
 
                     }
+                    else if (currentKeyboardState.IsKeyDown(Keys.A))
+                    {
+
+                        player.PlayerAnimation.Looping = true;
+
+                        player.Position.X -= playerMoveSpeed;
+
+                    }
 
                     //if D is released stop moving
                     if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
+                    {
+                        player.PlayerAnimation.Looping = false;
+                    } if (oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A))
                     {
                         player.PlayerAnimation.Looping = false;
                     }
