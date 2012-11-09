@@ -48,6 +48,9 @@ namespace PlatformerProject
 
         GamePadState currentGamePadState;
         GamePadState oldGamePadState;
+
+        //Title Screen Texture
+        Texture2D titleScreen;
            
 
         //These are 2D textures that are drawn onto the screen
@@ -80,7 +83,7 @@ namespace PlatformerProject
             player = new Player();
             playerMoveSpeed = 3.0f;
            
-            currentState = State.PlayState;
+            currentState = State.TitleState;
 
             base.Initialize();
         }
@@ -93,6 +96,9 @@ namespace PlatformerProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            //Load Title Screen
+            titleScreen = Content.Load<Texture2D>("Titlescreen");
 
             //Load the player and his animations
             Animation playerAnimation = new Animation();
@@ -151,17 +157,24 @@ namespace PlatformerProject
             //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
 
-            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background    
+            spriteBatch.Draw(menuScreen, Vector2.Zero, Color.White);    //Draw the main background    
             
              //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
-            platform.drawNoCol();
-            player.Draw(spriteBatch);
+            if (currentState == State.PlayState)
+            {
+                platform.drawNoCol();
+                player.Draw(spriteBatch);
+            }
 
             //Will draw the menu only if the game is currently in the MenuState
             if (currentState == State.MenuState)
             {
                 spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
                 mousePointer.drawNoCol();
+            }
+            if(currentState == State.TitleState)
+            {
+                spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.End();
@@ -229,7 +242,7 @@ namespace PlatformerProject
                {
                    mousePointer.incrementPosition(100f, 0f);
                    mouseCounter = 1;
-                   
+
                }
 
                //if a is pressed move menu arrow right, but only if it is currently on exit option
@@ -238,6 +251,10 @@ namespace PlatformerProject
                    mousePointer.incrementPosition(-100f, 0f);
                    mouseCounter = 0;
                }
+           }
+           else
+           {
+
            }
 //*********************************************************************************************************************************************
 //************************************************* END OF CONTROL SECTION ********************************************************************
