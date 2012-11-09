@@ -157,24 +157,25 @@ namespace PlatformerProject
             //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
 
-            spriteBatch.Draw(menuScreen, Vector2.Zero, Color.White);    //Draw the main background    
+            spriteBatch.Draw(mainbackground, Vector2.Zero, Color.White);    //Draw the main background    
             
              //This is the overload method that will work with scaling we would just need to make an alternate draw method for scaling. 
-            if (currentState == State.PlayState)
+            if (currentState == State.PlayState || currentState == State.MenuState)
             {
                 platform.drawNoCol();
                 player.Draw(spriteBatch);
-            }
 
-            //Will draw the menu only if the game is currently in the MenuState
-            if (currentState == State.MenuState)
-            {
-                spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
-                mousePointer.drawNoCol();
+                if (currentState == State.MenuState)
+                {
+                    spriteBatch.Draw(menuScreen, new Vector2(200, 200), null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
+                    mousePointer.drawNoCol();
+                }
             }
+            //Will draw the menu only if the game is currently in the MenuState
+           
             if(currentState == State.TitleState)
             {
-                spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .5f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .75f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.End();
@@ -252,8 +253,15 @@ namespace PlatformerProject
                    mouseCounter = 0;
                }
            }
-           else
+ //*********************************************************************************************************************************************
+ //************************************************* CONTROL FOR TITLESTATE *********************************************************************
+ //*********************************************************************************************************************************************
+           else if(currentState == State.TitleState)
            {
+               if (oldKeyboardState.IsKeyDown(Keys.Enter) && currentKeyboardState.IsKeyUp(Keys.Enter))
+               {
+                   currentState = State.PlayState;
+               }
 
            }
 //*********************************************************************************************************************************************
