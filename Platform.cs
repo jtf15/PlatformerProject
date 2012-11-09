@@ -19,7 +19,7 @@ namespace PlatformerProject
         public Vector2 position;
         
         // The width and the height, in order to calculate hitbox
-        public float width, height;
+        public int width, height;
         
         // The rectancle surrounding the object, will be used for collision
         public Rectangle hitbox;
@@ -34,8 +34,8 @@ namespace PlatformerProject
         {
             this.picture = picture;     // The picture to be drawn
             this.position = position;   // The position to where it will be drawn
-            this.width = picture.Width * scale; // Width of the picture
-            this.height = picture.Height * scale; //Height of the sprite
+            this.width = (int)(picture.Width * scale); // Width of the picture
+            this.height = (int)(picture.Height * scale); //Height of the sprite
             hitbox = new Rectangle((int)position.X, (int)position.Y, (int)this.width, (int)this.height); //This hitbox is the rectangle that is surrounding the sprite
             this.batch = batch; // Getting the batch so that we can draw in this funtion
             this.scale = scale; // In case we need to scale (in example, for the floor). 
@@ -50,6 +50,20 @@ namespace PlatformerProject
 
         }
 
+        public Vector2 getPosition()
+        {
+            return position;
+        }
+
+        public int getWidth()
+        {
+            return width;
+        }
+
+        public int getHeight()
+        {
+            return height;
+        }
 
     }
 }

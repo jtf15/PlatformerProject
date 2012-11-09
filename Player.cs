@@ -65,5 +65,20 @@ namespace PlatformerProject
             hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height);
             PlayerAnimation.Draw(spriteBatch);
         }
+
+        public Vector2 getPosition()
+        {
+            return Position;
+        }
+
+        public int getWidth()
+        {
+            return Width;
+        }
+
+        public int getHeight()
+        {
+            return Height;
+        }
     }
 }

@@ -10,7 +10,8 @@ namespace PlatformerProject
 {
     interface Collidable
     {
-        public Vector2 position;
-        public float width, height;
+        Vector2 getPosition();
+        int getWidth();
+        int getHeight();
     }
 }

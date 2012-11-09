@@ -10,7 +10,7 @@ namespace PlatformerProject
 
         public bool rightCollide(Collidable player, Collidable second)
         {
-            if (player.position.X >= second.position.X && player.position.X >= (second.position.X + second.width))
+            if (player.getPosition().X >= second.getPosition().X && player.getPosition().X >= (second.getPosition().X + second.getWidth()))
             {
                 return true;
             }
@@ -19,7 +19,7 @@ namespace PlatformerProject
 
         public bool aboveCollide(Collidable player, Collidable second)
         {
-            if ((second.position.Y - player.position.Y) >= 30 && (second.position.Y - player.position.Y) <= 35)
+            if ((second.getPosition().Y - player.getPosition().Y) >= 30 && (second.getPosition().Y - player.getPosition().Y) <= 35)
             {
                 return true;
             }
