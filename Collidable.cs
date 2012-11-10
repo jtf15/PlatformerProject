@@ -13,5 +13,6 @@ namespace PlatformerProject
         Vector2 getPosition();
         int getWidth();
         int getHeight();
+        Rectangle getHitbox();
     }
 }

@@ -206,7 +206,7 @@ namespace PlatformerProject
 //*********************************************************************************************************************************************
            if(currentState == State.PlayState)
             { 
-               if (physics.isOnTopOf(player, platform))
+               if ((player.hitbox.Intersects(platform.hitbox)))
                 {
                     if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
                     {
@@ -222,6 +222,15 @@ namespace PlatformerProject
                         player.PlayerAnimation.Looping = true;
 
                         player.Position.X -= playerMoveSpeed;
+
+                    } 
+
+                    if (currentKeyboardState.IsKeyDown(Keys.Space))
+                    {
+
+                        
+
+                        player.Position.Y -= 50;
 
                     } 
 
@@ -245,7 +254,7 @@ namespace PlatformerProject
                 {
                     player.PlayerAnimation.Looping = false;
                     player.Position.Y += playerMoveSpeed;
-                    player.Position.X += playerMoveSpeed;
+                    
                 }
               
             }

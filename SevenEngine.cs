@@ -32,6 +32,8 @@ namespace PlatformerProject
            return false;
          }
 
+      
+
         public bool isOnTopOf(Collidable player, Collidable second)
         {
             if (rightCollide(player, second) && aboveCollide(player, second)) 
@@ -45,7 +47,7 @@ namespace PlatformerProject
 
         public bool aboveCollide(Collidable player, Collidable second)
         {
-            if ((second.getPosition().Y - player.getPosition().Y) >= 0 && (second.getPosition().Y - player.getPosition().Y) <= 35)
+            if ((second.getPosition().Y - player.getPosition().Y) == 0)
             {
                 return true;
             }

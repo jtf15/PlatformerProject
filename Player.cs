@@ -80,5 +80,11 @@ namespace PlatformerProject
         {
             return Height;
         }
+
+        public Rectangle getHitbox()
+        {
+            return hitbox;
+        }
+
     }
 }
