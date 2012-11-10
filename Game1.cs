@@ -205,8 +205,8 @@ namespace PlatformerProject
 //************************************************* CONTROL FOR PLAYSTATE *********************************************************************
 //*********************************************************************************************************************************************
            if(currentState == State.PlayState)
-            {
-                 if (physics.isOnTopOf(player, platform))
+            { 
+               if (physics.isOnTopOf(player, platform))
                 {
                     if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
                     {
@@ -223,15 +223,7 @@ namespace PlatformerProject
 
                         player.Position.X -= playerMoveSpeed;
 
-                    }
-                    else if (currentKeyboardState.IsKeyDown(Keys.Space))
-                    {
-
-                        player.PlayerAnimation.Looping = true;
-
-                        player.Position.Y -= playerMoveSpeed;
-
-                    }
+                    } 
 
                     //if D is released stop moving
                     if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
@@ -243,7 +235,7 @@ namespace PlatformerProject
                     } 
 
                     //if m is pressed stop moving and switch to MenuState
-                    if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
+                    if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
                     {
                         player.PlayerAnimation.Looping = false;
                         currentState = State.MenuState;
@@ -263,7 +255,7 @@ namespace PlatformerProject
            else if (currentState == State.MenuState)
            {
                //if c is pressed go back to the PlayState
-               if ((oldKeyboardState.IsKeyDown(Keys.C) && currentKeyboardState.IsKeyUp(Keys.C)) || currentGamePadState.Buttons.B == ButtonState.Pressed)
+               if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.B == ButtonState.Pressed)
                {
                    currentState = State.PlayState;
                }
