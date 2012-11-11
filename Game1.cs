@@ -207,31 +207,25 @@ namespace PlatformerProject
            if(currentState == State.PlayState)
             { 
                if ((player.hitbox.Intersects(platform.hitbox)))
-                {
+               {
                     if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
                     {
 
                         player.PlayerAnimation.Looping = true;
-                        
-                            player.Position.X += playerMoveSpeed;
+                        player.Position.X += playerMoveSpeed;
 
                     }
                     else if (currentKeyboardState.IsKeyDown(Keys.A))
                     {
 
                         player.PlayerAnimation.Looping = true;
-
                         player.Position.X -= playerMoveSpeed;
 
                     } 
 
                     if (currentKeyboardState.IsKeyDown(Keys.Space))
                     {
-
-                        
-
                         player.Position.Y -= 50;
-
                     } 
 
                     //if D is released stop moving
@@ -242,7 +236,6 @@ namespace PlatformerProject
                     {
                         player.PlayerAnimation.Looping = false;
                     } 
-
                     //if m is pressed stop moving and switch to MenuState
                     if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
                     {
@@ -300,9 +293,6 @@ namespace PlatformerProject
            
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
-
-
-
 
             oldKeyboardState = currentKeyboardState;
             oldGamePadState = currentGamePadState;
