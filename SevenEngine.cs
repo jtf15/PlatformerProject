@@ -25,7 +25,7 @@ namespace PlatformerProject
 
         public bool rightCollide(Collidable player, Collidable second)
         {
-            if (player.getPosition().X >= second.getPosition().X && player.getPosition().X <= (second.getPosition().X + second.getWidth()))
+            if(player.getPosition().X >= second.getPosition().X && player.getPosition().X <= (second.getPosition().X + second.getWidth()))
             {
                 return true;
             }

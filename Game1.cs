@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -37,7 +38,8 @@ namespace PlatformerProject
         {
             TitleState,
             PlayState,
-            MenuState
+            MenuState,
+            GOState 
         };
 
         State currentState; //this is the variable that keeps track of the state
@@ -50,11 +52,13 @@ namespace PlatformerProject
         GamePadState oldGamePadState;
 
         //Title Screen Texture
-        Texture2D titleScreen;
+        Texture2D titleScreen, goScreen;
        
         SevenEngine physics;
 
         //These are 2D textures that are drawn onto the screen
+        
+        ArrayList platforms;
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
         Platform platform, platform2;
@@ -101,10 +105,10 @@ namespace PlatformerProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            platforms = new ArrayList() ;
             //Load Title Screen
             titleScreen = Content.Load<Texture2D>("Titlescreen");
-
+            goScreen = Content.Load<Texture2D>("Gameover");
             //Load the player and his animations
             Animation playerAnimation = new Animation();
             Texture2D playerTexture = Content.Load<Texture2D>("kidright");
@@ -118,8 +122,10 @@ namespace PlatformerProject
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
-            platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(0f, 400f), spriteBatch, 2f);
-            platform2 = new Platform(Content.Load<Texture2D>("platform2"), new Vector2(150f, 320f), spriteBatch, 2f);
+            platform = new Platform(Content.Load<Texture2D>("platform"), new Vector2(0f, 400f), spriteBatch, 5f);
+            platform2 = new Platform(Content.Load<Texture2D>("platform2"), new Vector2(500f, 400f), spriteBatch, 2f);
+            platforms.Add(platform);
+            platforms.Add(platform2);
             mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
@@ -170,6 +176,8 @@ namespace PlatformerProject
             //This will actually lay on top of the main background
             if (currentState == State.TitleState)
             {
+                player.Position = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X + 20f, GraphicsDevice.Viewport.TitleSafeArea.Y
+            + GraphicsDevice.Viewport.TitleSafeArea.Height / 2) ; 
                 spriteBatch.Draw(titleScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .75f, SpriteEffects.None, 0f); //draw the titlescreen
             }
 
@@ -192,6 +200,11 @@ namespace PlatformerProject
                 }
             }
 
+            if (currentState == State.GOState)
+            {
+                spriteBatch.Draw(goScreen, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, .75f, SpriteEffects.None, 0f); //draw the titlescreen
+            }
+
             //end the sprite batch and ends current Update's Drawing process
             spriteBatch.End();
             base.Draw(gameTime);
@@ -209,9 +222,9 @@ namespace PlatformerProject
             //*********************************************************************************************************************************************
             if (currentState == State.PlayState)
             {
-                if ((physics.isOnTopOf(player,platform)) && !jumping)
+                if (((physics.isOnTopOf(player,platform)) && !jumping) || (physics.isOnTopOf(player, platform2) && !jumping))
                 {
-                    if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
+                    if (currentKeyboardState.IsKeyDown(Keys.D) )
                     {
 
                         player.PlayerAnimation.Looping = true;
@@ -252,7 +265,7 @@ namespace PlatformerProject
                     player.Position.Y -= playerMoveSpeed;
                     if (player.Position.Y <= (oldH - 50))
                         jumping = false;
-                    if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
+                    if (currentKeyboardState.IsKeyDown(Keys.D))
                     {
 
                         player.PlayerAnimation.Looping = true;
@@ -271,14 +284,17 @@ namespace PlatformerProject
                 else
                 {
                     player.PlayerAnimation.Looping = false;
-                    if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
+                    if (player.Position.Y == graphics.GraphicsDevice.Viewport.Height) 
+                        currentState = State.GOState;
+                   
+                    if (currentKeyboardState.IsKeyDown(Keys.D) && player.Position.Y != graphics.GraphicsDevice.Viewport.Height)
                     {
 
                         player.PlayerAnimation.Looping = true;
                         player.Position.X += playerMoveSpeed;
 
                     }
-                    else if (currentKeyboardState.IsKeyDown(Keys.A))
+                    else if (currentKeyboardState.IsKeyDown(Keys.A) && player.Position.Y != graphics.GraphicsDevice.Viewport.Height)
                     {
 
                         player.PlayerAnimation.Looping = true;
@@ -326,12 +342,20 @@ namespace PlatformerProject
                 }
 
             }
+            else if (currentState == State.GOState)
+            {
+                if (oldKeyboardState.IsKeyDown(Keys.Enter) && currentKeyboardState.IsKeyUp(Keys.Enter))
+                {
+                    currentState = State.TitleState;
+                }
+
+            }
             //*********************************************************************************************************************************************
             //************************************************* END OF CONTROL SECTION ********************************************************************
             //*********************************************************************************************************************************************
 
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
-            player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
+            player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height);
 
             oldKeyboardState = currentKeyboardState;
             oldGamePadState = currentGamePadState;
