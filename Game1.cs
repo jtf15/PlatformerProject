@@ -271,6 +271,20 @@ namespace PlatformerProject
                 else
                 {
                     player.PlayerAnimation.Looping = false;
+                    if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
+                    {
+
+                        player.PlayerAnimation.Looping = true;
+                        player.Position.X += playerMoveSpeed;
+
+                    }
+                    else if (currentKeyboardState.IsKeyDown(Keys.A))
+                    {
+
+                        player.PlayerAnimation.Looping = true;
+                        player.Position.X -= playerMoveSpeed;
+
+                    }
                     player.Position.Y += playerMoveSpeed;
 
                 }
