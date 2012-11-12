@@ -51,20 +51,23 @@ namespace PlatformerProject
 
         //Title Screen Texture
         Texture2D titleScreen;
-
+       
         SevenEngine physics;
 
         //These are 2D textures that are drawn onto the screen
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
         Platform platform, platform2;
-       
-        
+
+
         //This is the menu screen used to choose options
         Texture2D menuScreen;
         NoCol mousePointer;     //The mouse pointer is a NoCol object to make it easier to move
         int mouseCounter = 0;   //This is currently used to know which option in the menu is selected
         
+        //The variables necessary for jumping
+        float oldH ;
+        bool jumping = false;
 
         public Game1()
         {
@@ -79,11 +82,11 @@ namespace PlatformerProject
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {   
+        {
             //Initialize the player and his movement speed
             player = new Player();
             playerMoveSpeed = 3.0f;
-           
+
             //Initialize the current state to title screen
             currentState = State.TitleState;
             physics = new SevenEngine();
@@ -98,7 +101,7 @@ namespace PlatformerProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             //Load Title Screen
             titleScreen = Content.Load<Texture2D>("Titlescreen");
 
@@ -109,7 +112,7 @@ namespace PlatformerProject
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X + 20f, GraphicsDevice.Viewport.TitleSafeArea.Y
             + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Initialize(playerAnimation, playerPosition);
-            
+
             //all of these are our test images to be used for now
             //later we will replace with the actual game textures
             mainbackground = Content.Load<Texture2D>("quickSky");
@@ -153,7 +156,7 @@ namespace PlatformerProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
+
             //Starts the sprite batch
             //Will be drwan in order, so things on bottom layer should be called first
             spriteBatch.Begin();
@@ -194,20 +197,20 @@ namespace PlatformerProject
             base.Draw(gameTime);
         }
 
-       private void UpdatePlayer(GameTime gameTime)
+        private void UpdatePlayer(GameTime gameTime)
         {
             player.Update(gameTime);
 
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
 
-//*********************************************************************************************************************************************
-//************************************************* CONTROL FOR PLAYSTATE *********************************************************************
-//*********************************************************************************************************************************************
-           if(currentState == State.PlayState)
-            { 
-               if ((player.hitbox.Intersects(platform.hitbox)))
-               {
+            //*********************************************************************************************************************************************
+            //************************************************* CONTROL FOR PLAYSTATE *********************************************************************
+            //*********************************************************************************************************************************************
+            if (currentState == State.PlayState)
+            {
+                if ((player.hitbox.Intersects(platform.hitbox)) && !jumping)
+                {
                     if (currentKeyboardState.IsKeyDown(Keys.D) && !physics.rightCollide(player, platform2) && !physics.aboveCollide(player, platform2))
                     {
 
@@ -221,12 +224,13 @@ namespace PlatformerProject
                         player.PlayerAnimation.Looping = true;
                         player.Position.X -= playerMoveSpeed;
 
-                    } 
+                    }
 
                     if (currentKeyboardState.IsKeyDown(Keys.Space))
                     {
-                        player.Position.Y -= 50;
-                    } 
+                        oldH = player.Position.Y;
+                        jumping = true;
+                    }
 
                     //if D is released stop moving
                     if (oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D))
@@ -235,7 +239,7 @@ namespace PlatformerProject
                     } if (oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A))
                     {
                         player.PlayerAnimation.Looping = false;
-                    } 
+                    }
                     //if m is pressed stop moving and switch to MenuState
                     if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
                     {
@@ -243,54 +247,60 @@ namespace PlatformerProject
                         currentState = State.MenuState;
                     }
                 }
+                else if (jumping)
+                {
+                    player.Position.Y -= playerMoveSpeed;
+                    if (player.Position.Y <= (oldH - 50))
+                        jumping = false;
+                }
                 else
                 {
                     player.PlayerAnimation.Looping = false;
                     player.Position.Y += playerMoveSpeed;
-                    
+
                 }
-              
+
             }
-//*********************************************************************************************************************************************
-//************************************************* CONTROL FOR MENUSTATE *********************************************************************
-//*********************************************************************************************************************************************
-           else if (currentState == State.MenuState)
-           {
-               //if c is pressed go back to the PlayState
-               if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.B == ButtonState.Pressed)
-               {
-                   currentState = State.PlayState;
-               }
-               //if d is pressed move menu arrow left, but only if it is currently on continue option
-               if (((oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.DPad.Right == ButtonState.Pressed) && mouseCounter == 0)
-               {
-                   mousePointer.incrementPosition(100f, 0f);
-                   mouseCounter = 1;
+            //*********************************************************************************************************************************************
+            //************************************************* CONTROL FOR MENUSTATE *********************************************************************
+            //*********************************************************************************************************************************************
+            else if (currentState == State.MenuState)
+            {
+                //if c is pressed go back to the PlayState
+                if ((oldKeyboardState.IsKeyDown(Keys.M) && currentKeyboardState.IsKeyUp(Keys.M)) || currentGamePadState.Buttons.B == ButtonState.Pressed)
+                {
+                    currentState = State.PlayState;
+                }
+                //if d is pressed move menu arrow left, but only if it is currently on continue option
+                if (((oldKeyboardState.IsKeyDown(Keys.D) && currentKeyboardState.IsKeyUp(Keys.D)) || currentGamePadState.DPad.Right == ButtonState.Pressed) && mouseCounter == 0)
+                {
+                    mousePointer.incrementPosition(100f, 0f);
+                    mouseCounter = 1;
 
-               }
+                }
 
-               //if a is pressed move menu arrow right, but only if it is currently on exit option
-               if (((oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A)) || currentGamePadState.DPad.Left == ButtonState.Pressed) && mouseCounter == 1)
-               {
-                   mousePointer.incrementPosition(-100f, 0f);
-                   mouseCounter = 0;
-               }
-           }
- //*********************************************************************************************************************************************
- //************************************************* CONTROL FOR TITLESTATE *********************************************************************
- //*********************************************************************************************************************************************
-           else if(currentState == State.TitleState)
-           {
-               if (oldKeyboardState.IsKeyDown(Keys.Enter) && currentKeyboardState.IsKeyUp(Keys.Enter))
-               {
-                   currentState = State.PlayState;
-               }
+                //if a is pressed move menu arrow right, but only if it is currently on exit option
+                if (((oldKeyboardState.IsKeyDown(Keys.A) && currentKeyboardState.IsKeyUp(Keys.A)) || currentGamePadState.DPad.Left == ButtonState.Pressed) && mouseCounter == 1)
+                {
+                    mousePointer.incrementPosition(-100f, 0f);
+                    mouseCounter = 0;
+                }
+            }
+            //*********************************************************************************************************************************************
+            //************************************************* CONTROL FOR TITLESTATE *********************************************************************
+            //*********************************************************************************************************************************************
+            else if (currentState == State.TitleState)
+            {
+                if (oldKeyboardState.IsKeyDown(Keys.Enter) && currentKeyboardState.IsKeyUp(Keys.Enter))
+                {
+                    currentState = State.PlayState;
+                }
 
-           }
-//*********************************************************************************************************************************************
-//************************************************* END OF CONTROL SECTION ********************************************************************
-//*********************************************************************************************************************************************
-           
+            }
+            //*********************************************************************************************************************************************
+            //************************************************* END OF CONTROL SECTION ********************************************************************
+            //*********************************************************************************************************************************************
+
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
@@ -299,7 +309,10 @@ namespace PlatformerProject
         }
 
 
-       
+
+
+
+
 
 
 
