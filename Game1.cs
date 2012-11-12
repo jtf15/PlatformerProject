@@ -130,6 +130,7 @@ namespace PlatformerProject
             platform2 = new Platform(Content.Load<Texture2D>("platform2"), new Vector2(500f, 400f), spriteBatch, 2f);
             platforms.Add(platform);
             platforms.Add(platform2);
+            //platforms.Add(enemy);
             mousePointer = new NoCol(Content.Load<Texture2D>("menuArrow"), new Vector2(280f, 260f), spriteBatch);
         }
 
