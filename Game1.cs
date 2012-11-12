@@ -31,6 +31,7 @@ namespace PlatformerProject
         Player player;
         float playerMoveSpeed;
 
+
         //This enumeration is used to keep track of the state
         //it will restrict updating to the proper components of the game
         //this would allow the game to appear frozen if in menu
@@ -62,6 +63,7 @@ namespace PlatformerProject
         Texture2D mainbackground;   //The main backgorund
         Texture2D nocol;            //Testing non-collision tree
         Platform platform, platform2;
+        Platform enemy;
 
 
         //This is the menu screen used to choose options
@@ -89,6 +91,7 @@ namespace PlatformerProject
         {
             //Initialize the player and his movement speed
             player = new Player();
+
             playerMoveSpeed = 3.0f;
 
             //Initialize the current state to title screen
@@ -119,6 +122,7 @@ namespace PlatformerProject
 
             //all of these are our test images to be used for now
             //later we will replace with the actual game textures
+            enemy = new Platform(Content.Load<Texture2D>("enemy"), new Vector2(600f, 365f), spriteBatch, .5f);
             mainbackground = Content.Load<Texture2D>("quickSky");
             nocol = Content.Load<Texture2D>("treeSmall");
             menuScreen = Content.Load<Texture2D>("quickMenu");
@@ -190,7 +194,11 @@ namespace PlatformerProject
             {
                 platform.drawNoCol();        //draw the platform object
                 platform2.drawNoCol();
+                enemy.drawNoCol();
                 player.Draw(spriteBatch);    //draw the player onto the screen
+                
+           
+                
 
                 //This will be drawn on top of the player and all other current object if the current state is menu
                 if (currentState == State.MenuState)
@@ -294,8 +302,10 @@ namespace PlatformerProject
                         player.Position.X += playerMoveSpeed;
 
                     }
+
                     else if (currentKeyboardState.IsKeyDown(Keys.A) && player.Position.Y != graphics.GraphicsDevice.Viewport.Height)
                     {
+
 
                         player.PlayerAnimation.Looping = true;
                         player.Position.X -= playerMoveSpeed;
@@ -360,15 +370,6 @@ namespace PlatformerProject
             oldKeyboardState = currentKeyboardState;
             oldGamePadState = currentGamePadState;
         }
-
-
-
-
-
-
-
-
-
         
     }
 }
