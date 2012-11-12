@@ -47,7 +47,7 @@ namespace PlatformerProject
 
         public bool aboveCollide(Collidable player, Collidable second)
         {
-            if ((second.getPosition().Y - player.getPosition().Y) == 0)
+            if ((second.getPosition().Y - player.getPosition().Y) >= 0 && (second.getPosition().Y - player.getPosition().Y) <= 35)
             {
                 return true;
             }
