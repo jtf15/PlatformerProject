@@ -279,7 +279,7 @@ namespace PlatformerProject
 
                     }
                     else if (currentKeyboardState.IsKeyDown(Keys.A))
-                    {
+                    { 
 
                         player.PlayerAnimation.Looping = true;
                         player.Position.X -= playerMoveSpeed;
