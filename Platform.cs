@@ -70,5 +70,11 @@ namespace PlatformerProject
             return hitbox;
         }
 
+        public void setWidth(int width)
+        {
+            this.width = width;
+            //picture.Bounds.Width = width;
+        }
+
     }
 }
