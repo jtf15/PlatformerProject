@@ -222,9 +222,9 @@ namespace PlatformerProject
             //*********************************************************************************************************************************************
             if (currentState == State.PlayState)
             {
-                if (((physics.isOnTopOf(player,platform)) && !jumping) || (physics.isOnTopOf(player, platform2) && !jumping))
+                if ((physics.isOnTopOf(player, platforms) && !jumping))
                 {
-                    if (currentKeyboardState.IsKeyDown(Keys.D) )
+                    if (currentKeyboardState.IsKeyDown(Keys.D))
                     {
 
                         player.PlayerAnimation.Looping = true;

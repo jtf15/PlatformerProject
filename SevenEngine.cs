@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Collections;
 /*
  * Current Problems with the Seven Physics Engine
  * -Going foward when not colliding with a Collidable Object
@@ -23,18 +23,19 @@ namespace PlatformerProject
     class SevenEngine
     {
 
-        public bool rightCollide(Collidable player, Collidable second)
+        public bool rightCollide(Collidable player, ArrayList second)
         {
-            if(player.getPosition().X >= second.getPosition().X && player.getPosition().X <= (second.getPosition().X + second.getWidth()))
-            {
-                return true;
-            }
+            foreach (Platform i in second)
+                if(player.getPosition().X >= i.getPosition().X && player.getPosition().X <= (i.getPosition().X + i.getWidth()))
+                {
+                     return true;
+                }
            return false;
          }
 
       
 
-        public bool isOnTopOf(Collidable player, Collidable second)
+        public bool isOnTopOf(Collidable player, ArrayList second)
         {
             if (rightCollide(player, second) && aboveCollide(player, second)) 
             {
@@ -45,12 +46,13 @@ namespace PlatformerProject
         }
 
 
-        public bool aboveCollide(Collidable player, Collidable second)
+        public bool aboveCollide(Collidable player, ArrayList second)
         {
-            if ((second.getPosition().Y - player.getPosition().Y) >= 0 && (second.getPosition().Y - player.getPosition().Y) <= 35)
-            {
-                return true;
-            }
+            foreach(Platform i in second)
+                if ((i.getHitbox().Top - player.getPosition().Y) >= 0 && (i.getHitbox().Top - player.getPosition().Y) <= 30)
+                {
+                    return true;
+                }
             return false;
         }
 
